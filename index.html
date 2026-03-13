@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thư Viện - ĐH KTCN Thái Nguyên</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="login-wrapper">
+        <div class="login-card">
+            <div class="logo"><img src="logo.webp" alt="Logo TNUT" style="width:80px; height:80px; object-fit:contain;"></div>
+            <h1 style="font-size:18px; line-height:1.4;">TRƯỜNG ĐẠI HỌC KỸ THUẬT<br>CÔNG NGHIỆP THÁI NGUYÊN</h1>
+            <p class="subtitle" style="font-size:15px; color:var(--primary); font-weight:600; margin-top:8px;">Hệ thống Quản lý Thư viện</p>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Mã số sinh viên / Tài khoản</label>
+                    <input type="text" id="username" placeholder="Nhập MSSV (VD: SV2024001) hoặc admin" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Mật khẩu</label>
+                    <input type="password" id="password" placeholder="Mật khẩu mặc định: 123" required autocomplete="current-password">
+                </div>
+                <div id="loginError" style="color:#ef4444; font-size:13px; margin-bottom:12px; display:none;"></div>
+                <button type="submit" class="btn btn-primary btn-lg">🔐 Đăng Nhập</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/algorithms.js"></script>
+    <script src="js/storage.js"></script>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const loginId = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('loginError');
+
+            const result = Storage.login(loginId, password);
+            if (result.success) {
+                if (result.user.role === 'admin') {
+                    window.location.href = 'admin.html';
+                } else {
+                    window.location.href = 'user.html';
+                }
+            } else {
+                errorDiv.textContent = result.message;
+                errorDiv.style.display = 'block';
+            }
+        });
+
+        // Nếu đã đăng nhập, chuyển hướng
+        const currentUser = Storage.getCurrentUser();
+        if (currentUser) {
+            if (currentUser.role === 'admin') {
+                window.location.href = 'admin.html';
+            } else {
+                window.location.href = 'user.html';
+            }
+        }
+    </script>
+</body>
+</html>
